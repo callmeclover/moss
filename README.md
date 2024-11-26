@@ -1,3 +1,3 @@
 # moss
 
-This is the repository for the `mos(o)s` kernel.
+This is the repository for the `m(os)s`/`mossOS` kernel.

@@ -1,33 +1,13 @@
-#![no_std]
-#![no_main]
-#![feature(ascii_char)]
+use std::{env, fs, path::PathBuf};
 
-mod tty;
-mod vga;
+fn main() {
+    let current_exe: PathBuf = env::current_exe().unwrap();
+    let uefi_target: PathBuf = current_exe.with_file_name("uefi.img");
+    let bios_target: PathBuf = current_exe.with_file_name("bios.img");
 
-extern crate alloc;
+    fs::copy(env!("UEFI_IMAGE"), &uefi_target).unwrap();
+    fs::copy(env!("BIOS_IMAGE"), &bios_target).unwrap();
 
-use talc::{ClaimOnOom, Span, Talc, Talck};
-use tty::terminal_initialize;
-
-static mut ARENA: [u8; 10000] = [0; 10000];
-
-#[global_allocator]
-static ALLOCATOR: Talck<spin::Mutex<()>, ClaimOnOom> =
-	Talc::new(unsafe { ClaimOnOom::new(Span::from_array((&raw const ARENA).cast_mut())) }).lock();
-
-#[no_mangle]
-extern "Rust" fn _start() {
-	unsafe {
-		terminal_initialize();
-	}
-
-	println!("Hello, world!");
-
-	loop {}
-}
-
-#[panic_handler]
-const fn panic(_info: &core::panic::PanicInfo) -> ! {
-	loop {}
+    println!("UEFI disk image at {}", uefi_target.display());
+    println!("BIOS disk image at {}", bios_target.display());
 }
