@@ -2,7 +2,7 @@
 name = "kernel"
 authors = ["Clover Johnson <clover.johnson@mailfence.com>"]
 license = "MIT"
-readme = "README.md"
+readme = "../README.md"
 version = "0.1.0"
 edition = "2021"
 
